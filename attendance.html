@@ -3862,14 +3862,19 @@ function analyzeMarchPatterns() {
     });
   });
 
-  // 일별 07:30, 10:00 담당자 맵 (예외일 제외)
+  // 일별 오전당직, 오후당직 담당자 맵 (예외일 제외)
+  const dt = appData.settings.dutyTimes || DEFAULT_DUTY_TIMES;
+  const amTime = dt['오전'].start;
+  // 3월 데이터는 10:00으로 기록되어 있으므로 패턴 분석 시 10:00도 오후로 인식
+  const pmTimeCurrent = dt['오후'].start;
+  const pmTimeLegacy = '10:00';
   const dailyAm = {};
   const dailyPm = {};
   marchWorkdays.forEach(d => {
     if (EXCEPTION_DAYS.includes(d)) return;
     Object.entries(empDailyTimes).forEach(([name, days]) => {
-      if (days[d] === '07:30') dailyAm[d] = name;
-      if (days[d] === '10:00') dailyPm[d] = name;
+      if (days[d] === amTime || days[d] === '07:30') dailyAm[d] = name;
+      if (days[d] === pmTimeCurrent || days[d] === pmTimeLegacy) dailyPm[d] = name;
     });
   });
 
@@ -4032,9 +4037,13 @@ function generatePrediction(targetYm) {
     const st = empEndState[name];
     if (!st) return;
     let earlyDays = 0;
-    if (st.lastTime === '07:30' || st.lastTime === '10:00') {
+    const dtC = appData.settings.dutyTimes || DEFAULT_DUTY_TIMES;
+    const isDutyTime = st.lastTime === dtC['오전'].start || st.lastTime === '07:30'
+      || st.lastTime === dtC['오후'].start || st.lastTime === '10:00';
+    const isEarlyTime = st.lastTime === dtC['조기'].start || st.lastTime === '08:00';
+    if (isDutyTime) {
       if (st.consecutiveDays >= DUTY_BLOCK_LEN) earlyDays = DUTY_BLOCK_LEN;
-    } else if (st.lastTime === '08:00') {
+    } else if (isEarlyTime) {
       earlyDays = Math.max(0, DUTY_BLOCK_LEN - st.consecutiveDays);
     }
     let cnt = 0;
@@ -4094,9 +4103,10 @@ function generatePrediction(targetYm) {
     predictions[eid] = {};
     workdays.forEach(d => {
       let start;
-      if (amAssign[d] === emp.name) start = '07:30';
-      else if (pmAssign[d] === emp.name) start = '10:00';
-      else if (earlyAssign[d] && earlyAssign[d].includes(emp.name)) start = '08:00';
+      const dtP = appData.settings.dutyTimes || DEFAULT_DUTY_TIMES;
+      if (amAssign[d] === emp.name) start = dtP['오전'].start;
+      else if (pmAssign[d] === emp.name) start = dtP['오후'].start;
+      else if (earlyAssign[d] && earlyAssign[d].includes(emp.name)) start = dtP['조기'].start;
       else start = '09:00';
       predictions[eid][d] = { type: 'work', start, end: timeEndMap[start] || '18:00' };
     });
