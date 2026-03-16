@@ -770,6 +770,8 @@ body {
 .cal-event-dim:hover { opacity: 0.6; }
 .cal-duty-line { line-height: 14px; margin-top: 4px; margin-bottom: 1px; text-align: left; }
 .cal-info-line { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: left; }
+.cal-name-line { text-align: center; font-size: inherit; line-height: 1.3; }
+.cal-time-line { text-align: center; font-size: inherit; line-height: 1.3; }
 
 /* ===== M3 Analytics (Tab 3) ===== */
 .summary-cards {
@@ -963,6 +965,10 @@ body {
   body.print-calendar .cal-event-me .cal-info-line {
     text-align: center;
   }
+  body.print-calendar .cal-name-line,
+  body.print-calendar .cal-time-line {
+    text-align: center;
+  }
   body.print-calendar .cal-holiday-label {
     font-size: 9px;
   }
@@ -1041,10 +1047,10 @@ body {
 }
 @media (max-width: 480px) {
   .tab-content { padding: 4px; }
-  /* 헤더: 월 네비게이션 + 아이콘을 2줄로 분리 */
-  .attendance-header { padding: 6px 8px; gap: 4px; }
+  /* 헤더: 월 네비게이션 + 아이콘을 세로 분리 */
+  .attendance-header { flex-direction: column; padding: 6px 8px; gap: 4px; margin-top: 40px; }
   .attendance-header .month-nav { width: 100%; justify-content: center; }
-  .attendance-header .month-title { font-size: 15px; }
+  .attendance-header .month-title { font-size: 18px; }
   .header-actions { width: 100%; justify-content: center; gap: 2px !important; }
   .header-icon-btn { width: 30px; height: 30px; }
   .header-icon-btn svg { width: 16px; height: 16px; }
@@ -2351,11 +2357,11 @@ function renderCalendarView(ym, days, employees, todayStr, todayDay, onlyMeState
             const calBadgeStyle = dutyType ? getDutyBadgeStyle(dutyType) : '';
             const dutyBadge = dutyType ? `<span class="badge-duty" style="${calBadgeStyle}">${dutyType}</span>` : '';
             if (isMe && dutyBadge) {
-              text = `<div class="cal-duty-line" style="text-align:center;">${dutyBadge}</div><div class="cal-info-line" style="text-align:center;">${escapeHtml(emp.name)} ${useData.start}~${useData.end}</div>`;
+              text = `<div class="cal-duty-line" style="text-align:center;">${dutyBadge}</div><div class="cal-name-line">${escapeHtml(emp.name)}</div><div class="cal-time-line">${useData.start}</div><div class="cal-time-line">${useData.end}</div>`;
             } else if (isMe) {
-              text = `<div class="cal-info-line" style="text-align:center;">${escapeHtml(emp.name)} ${useData.start}~${useData.end}</div>`;
+              text = `<div class="cal-name-line">${escapeHtml(emp.name)}</div><div class="cal-time-line">${useData.start}</div><div class="cal-time-line">${useData.end}</div>`;
             } else {
-              text = `<div class="cal-info-line">${dutyBadge} ${escapeHtml(emp.name)} ${useData.start}~${useData.end}</div>`;
+              text = `<div class="cal-info-line">${dutyBadge} <span class="cal-name-mob">${escapeHtml(emp.name)}</span> <span class="cal-time-mob">${useData.start}~${useData.end}</span></div>`;
             }
             if (att && pred && pred.start !== att.start && isMe) {
               text += `<div style="font-size:8px;color:var(--md-error);">예측:${pred.start}</div>`;
