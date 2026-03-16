@@ -1020,6 +1020,7 @@ body {
   .header-icon-btn svg { width: 18px; height: 18px; }
   .header-divider { height: 20px; }
   /* 달력 반응형 */
+  .cal-grid { min-width: unset !important; }
   .cal-header { padding: 6px 2px; font-size: 11px; }
   .cal-cell { min-height: 80px !important; padding: 3px; }
   .cal-day-num { width: 20px; height: 20px; font-size: 12px; margin-bottom: 2px; }
@@ -1031,6 +1032,7 @@ body {
   .cal-duty-line { margin-top: 2px; }
   .cal-info-line { font-size: 10px; }
   .cal-event-me .cal-info-line { font-size: 11px; }
+  .cal-info-line { white-space: normal; word-break: break-all; }
   /* 노트 반응형 */
   .cal-note { padding: 2px 3px; }
   .cal-note-title { font-size: 10px; }
@@ -1047,7 +1049,9 @@ body {
   .header-icon-btn { width: 30px; height: 30px; }
   .header-icon-btn svg { width: 16px; height: 16px; }
   /* 달력 더 축소 */
-  .cal-cell { min-height: 65px !important; padding: 2px; }
+  .cal-grid { min-width: unset !important; }
+  .cal-grid-wrapper { overflow-x: hidden; }
+  .cal-cell { min-height: 60px !important; padding: 2px; }
   .cal-day-num { width: 18px; height: 18px; font-size: 11px; margin-bottom: 1px; }
   .cal-header { padding: 4px 1px; font-size: 10px; }
   .cal-event { font-size: 9px; line-height: 14px; padding: 0 2px; }
@@ -1057,6 +1061,7 @@ body {
   .cal-holiday-label { font-size: 8px; padding: 1px 2px; }
   .cal-info-line { font-size: 9px; }
   .cal-event-me .cal-info-line { font-size: 10px; }
+  .cal-info-line { white-space: normal; word-break: break-all; }
   /* 노트 */
   .cal-note { padding: 1px 2px; }
   .cal-note-title { font-size: 9px; }
